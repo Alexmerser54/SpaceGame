@@ -10,13 +10,15 @@ namespace SpaceGame.Game
     class Star
     {
         Point position;
-        int radius;
+        int energyRadius;
+        int destroyRadius;
         int power;
 
-        public Star(Point pos, int radius, int power)
+        public Star(Point pos, int energyRadius, int destroyRadius, int power)
         {
             position = pos;
-            this.radius = radius;
+            this.energyRadius = energyRadius;
+            this.destroyRadius = destroyRadius;
             this.power = power;
         }
 
@@ -28,11 +30,20 @@ namespace SpaceGame.Game
             }
         }
 
-        public int Radius
+        public int EnergyRadius
         {
             get
             {
-                return radius;
+                return energyRadius;
+            }
+        }
+
+
+        public int DestroyRadius
+        {
+            get
+            {
+                return destroyRadius;
             }
         }
 

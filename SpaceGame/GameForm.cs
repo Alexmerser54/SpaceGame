@@ -30,9 +30,12 @@ namespace SpaceGame
         Pen playerPen;
         Pen gridPed;
         Pen starPen;
+        Pen starEnergyRadiusPen;
+        Pen starDestroyRadiusPen;
         Pen markerPen;
         Pen planetPen;
         Pen stationPen;
+
 
         Random rand;
 
@@ -53,11 +56,42 @@ namespace SpaceGame
             PaintSquare(rectangles[player.Position.Y][player.Position.X], e, pen.Brush);
         }
 
-        void RenderStars(Pen pen, PaintEventArgs e)
+        void RenderStars(Pen starPen, Pen energyRadiusPen, Pen destroyRadiusPen, PaintEventArgs e)
         {
             foreach (var star in stars)
             {
-                PaintSquare(rectangles[star.Position.Y][star.Position.X], e, pen.Brush);
+                int diametr = 2 * star.EnergyRadius + 1;
+                int startX = star.Position.X - star.EnergyRadius;
+                int startY = star.Position.Y;
+                int endX = startX + diametr;
+                for (int i = 0; i <= star.EnergyRadius; i++)
+                {
+                    for (int j = startX; j < endX; j++)
+                    {
+                        PaintSquare(rectangles[startY + i][j], e, energyRadiusPen.Brush);
+                        PaintSquare(rectangles[startY - i][j], e, energyRadiusPen.Brush);
+                    }
+                    startX++;
+                    endX--;
+                }
+
+                diametr = 2 * star.DestroyRadius + 1;
+                startX = star.Position.X - star.DestroyRadius;
+                startY = star.Position.Y;
+                endX = startX + diametr;
+
+                for (int i = 0; i <= star.DestroyRadius; i++)
+                {
+                    for (int j = startX; j < endX; j++)
+                    {
+                        PaintSquare(rectangles[startY + i][j], e, destroyRadiusPen.Brush);
+                        PaintSquare(rectangles[startY - i][j], e, destroyRadiusPen.Brush);
+                    }
+                    startX++;
+                    endX--;
+                }
+
+                PaintSquare(rectangles[star.Position.Y][star.Position.X], e, starPen.Brush);
             }
         }
 
@@ -79,7 +113,7 @@ namespace SpaceGame
 
         void RenderMarker(Pen pen, PaintEventArgs e)
         {
-            PaintSquare(rectangles[rowNumber][colNumber], e, pen.Brush);
+            PaintFrame(rectangles[rowNumber][colNumber], e, pen.Brush);
         }
 
         void DrawGrid(PaintEventArgs e, Pen pen)
@@ -157,7 +191,7 @@ namespace SpaceGame
 
             for (int i = 0; i < stars.Length; i++)
             {
-                stars[i] = new Star(new Point(rand.Next(CELLS_NUM), rand.Next(CELLS_NUM)), rand.Next(1, 3), 20);
+                stars[i] = new Star(new Point(rand.Next(CELLS_NUM), rand.Next(CELLS_NUM)), rand.Next(1, 3), rand.Next(1, 2), 20);
             }
 
             for (int i = 0; i < planets.Length; i++)
@@ -170,9 +204,15 @@ namespace SpaceGame
                 stations[i] = new Station(new Point(rand.Next(CELLS_NUM), rand.Next(CELLS_NUM)));
             }
 
+
+            player = new Player(new Point(2, 4));
+
+            markerPen = new Pen(Brushes.Red);
             playerPen = new Pen(Brushes.Black);
             gridPed = new Pen(Brushes.Black);
             starPen = new Pen(Brushes.Yellow);
+            starEnergyRadiusPen = new Pen(Brushes.LightYellow);
+            starDestroyRadiusPen = new Pen(Brushes.Red);
             planetPen = new Pen(Brushes.LawnGreen);
             stationPen = new Pen(Brushes.BlueViolet);
 
@@ -183,12 +223,17 @@ namespace SpaceGame
             e.Graphics.FillRectangle(brush, rect);
         }
 
+        void PaintFrame(Rectangle rect, PaintEventArgs e, Brush brush)
+        {
+            e.Graphics.DrawRectangle(new Pen(brush), rect);
+            // e.Graphics.FillRectangle(brush, rect);
+        }
+
         private void GameForm_Load(object sender, EventArgs e)
         {
             cellSize = (panel1.Height < panel1.Width ? panel1.Height : panel1.Width) / CELLS_NUM;
 
-            player = new Player(new Point(2, 4));
-            markerPen = new Pen(Brushes.Gray);
+
 
             InitCells();
         }
@@ -201,7 +246,7 @@ namespace SpaceGame
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
             DrawGrid(e, gridPed);
-            RenderStars(starPen, e);
+            RenderStars(starPen, starEnergyRadiusPen, starDestroyRadiusPen, e);
             RenderPlanets(planetPen, e);
             RenderStations(stationPen, e);
 
