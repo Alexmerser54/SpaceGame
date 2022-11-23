@@ -8,22 +8,17 @@ using System.Text;
 using System.Threading.Tasks;
 using SpaceGame.Game;
 using System.Windows.Forms;
-
+using SpaceGame.Game.Objects;
 
 namespace SpaceGame
 {
-    public partial class GameForm : Form
+    partial class GameForm : Form
     {
         const int CELLS_NUM = 40;
-        int[,] gameField;
         int cellSize;
         int starsCount;
         int planetCount;
         int stationsCount;
-
-        List<bool> fill;
-        int rowCount = 20;
-        int colCount = 20;
         //int cellSize = 30;
 
         Player player;
@@ -46,14 +41,16 @@ namespace SpaceGame
         int tempX;
         int tempY;
         Point coordsToMove;
+        Point oldCoordsToMove;
 
         RefrashStates refrashState;
         Rectangle[][] rectangles;
-        int colNumber;
-        int rowNumber;
+
+        Label[] fuelLabels;
+
         void RenderPlayer(Pen pen, PaintEventArgs e)
         {
-            PaintSquare(rectangles[player.Position.Y][player.Position.X], e, pen.Brush);
+            PaintSquare(rectangles[player.Position.X][player.Position.Y], e, pen.Brush);
         }
 
         void RenderStars(Pen starPen, Pen energyRadiusPen, Pen destroyRadiusPen, PaintEventArgs e)
@@ -68,8 +65,8 @@ namespace SpaceGame
                 {
                     for (int j = startX; j < endX; j++)
                     {
-                        PaintSquare(rectangles[startY + i][j], e, energyRadiusPen.Brush);
-                        PaintSquare(rectangles[startY - i][j], e, energyRadiusPen.Brush);
+                        PaintSquare(rectangles[j][startY + i], e, energyRadiusPen.Brush);
+                        PaintSquare(rectangles[j][startY - i], e, energyRadiusPen.Brush);
                     }
                     startX++;
                     endX--;
@@ -84,14 +81,14 @@ namespace SpaceGame
                 {
                     for (int j = startX; j < endX; j++)
                     {
-                        PaintSquare(rectangles[startY + i][j], e, destroyRadiusPen.Brush);
-                        PaintSquare(rectangles[startY - i][j], e, destroyRadiusPen.Brush);
+                        PaintSquare(rectangles[j][startY + i], e, destroyRadiusPen.Brush);
+                        PaintSquare(rectangles[j][startY - i], e, destroyRadiusPen.Brush);
                     }
                     startX++;
                     endX--;
                 }
 
-                PaintSquare(rectangles[star.Position.Y][star.Position.X], e, starPen.Brush);
+                PaintSquare(rectangles[star.Position.X][star.Position.Y], e, starPen.Brush);
             }
         }
 
@@ -99,7 +96,7 @@ namespace SpaceGame
         {
             foreach (var planet in planets)
             {
-                PaintSquare(rectangles[planet.Position.Y][planet.Position.X], e, pen.Brush);
+                PaintSquare(rectangles[planet.Position.X][planet.Position.Y], e, pen.Brush);
             }
         }
 
@@ -107,13 +104,13 @@ namespace SpaceGame
         {
             foreach (var station in stations)
             {
-                PaintSquare(rectangles[station.Position.Y][station.Position.X], e, pen.Brush);
+                PaintSquare(rectangles[station.Position.X][station.Position.Y], e, pen.Brush);
             }
         }
 
         void RenderMarker(Pen pen, PaintEventArgs e)
         {
-            PaintFrame(rectangles[rowNumber][colNumber], e, pen.Brush);
+            PaintFrame(rectangles[coordsToMove.X][coordsToMove.Y], e, pen.Brush);
         }
 
         void DrawGrid(PaintEventArgs e, Pen pen)
@@ -132,14 +129,9 @@ namespace SpaceGame
                 rectangles[i] = new Rectangle[CELLS_NUM];
                 for (int j = 0; j < CELLS_NUM; j++)
                 {
-                    rectangles[i][j] = new Rectangle(j * cellSize, i * cellSize, cellSize, cellSize);
+                    rectangles[i][j] = new Rectangle(i * cellSize, j * cellSize, cellSize, cellSize);
                 }
             }
-        }
-
-        void MakeTurn()
-        {
-
         }
 
         void MovePlayer()
@@ -170,14 +162,39 @@ namespace SpaceGame
             {
                 tempY = player.Position.Y;
             }
-
+            //player.;
             player.Move(tempX, tempY);
         }
 
-        public GameForm()
+
+        void Refuil()
+        {
+            foreach (var station in stations)
+            {
+                if (player.Position == station.Position)
+                {
+                    player.refuelEngine(typeof(NuclearEngine));
+                }
+            }
+        }
+
+        bool CheckDectroying(Player player, Star[] stars)
+        {
+            foreach (var star in stars)
+            {
+                if (Math.Abs(player.Position.X - star.Position.X) <= star.DestroyRadius
+                     && Math.Abs(player.Position.Y - star.Position.Y) <= star.DestroyRadius)
+                    return true;
+            }
+            return false;
+        }
+
+        public GameForm(Player player)
         {
 
             InitializeComponent();
+            this.player = player;
+
             rand = new Random();
 
             starsCount = rand.Next(1, 5);
@@ -191,7 +208,8 @@ namespace SpaceGame
 
             for (int i = 0; i < stars.Length; i++)
             {
-                stars[i] = new Star(new Point(rand.Next(CELLS_NUM), rand.Next(CELLS_NUM)), rand.Next(1, 3), rand.Next(1, 2), 20);
+                int energyRadius = rand.Next(1, 3);
+                stars[i] = new Star(new Point(rand.Next(energyRadius, CELLS_NUM - energyRadius), rand.Next(energyRadius, CELLS_NUM - energyRadius)), energyRadius, rand.Next(1, energyRadius), 20);
             }
 
             for (int i = 0; i < planets.Length; i++)
@@ -205,7 +223,7 @@ namespace SpaceGame
             }
 
 
-            player = new Player(new Point(2, 4));
+            //player = new Player(new Point(2, 4), CELLS_NUM*2);
 
             markerPen = new Pen(Brushes.Red);
             playerPen = new Pen(Brushes.Black);
@@ -215,6 +233,8 @@ namespace SpaceGame
             starDestroyRadiusPen = new Pen(Brushes.Red);
             planetPen = new Pen(Brushes.LawnGreen);
             stationPen = new Pen(Brushes.BlueViolet);
+
+            fuelLabel.Text = player.Fuel.ToString();
 
         }
 
@@ -233,7 +253,24 @@ namespace SpaceGame
         {
             cellSize = (panel1.Height < panel1.Width ? panel1.Height : panel1.Width) / CELLS_NUM;
 
+            Label[] labels = { engine1Label, engine2Label, engine3Label };
+            fuelLabels = new Label[3] { engine1FuelLabel, engine2FuelLabel, engine3FuelLabel };
 
+            for (int i = 0; i < player.EnginesCount; i++)
+            {
+                labels[i].Visible = true;
+                fuelLabels[i].Visible = true;
+                if (player.GetEngines()[i].GetType() == typeof(OilEngine))
+                {
+                    labels[i].Text = "Нефтяной";
+                }
+                else if (player.GetEngines()[i].GetType() == typeof(NuclearEngine))
+                {
+                    labels[i].Text = "Ядерный";
+                }
+            }
+
+            //engine1Label.Text = player.GetEngines()[0].
 
             InitCells();
         }
@@ -256,20 +293,34 @@ namespace SpaceGame
             if (refrashState == RefrashStates.Turn)
             {
                 MovePlayer();
+                if (CheckDectroying(player, stars))
+                {
+                    Application.Exit();
+                }
                 refrashState = RefrashStates.None;
             }
 
             RenderPlayer(playerPen, e);
+
+
+            for (int i = 0; i < player.EnginesCount; i++)
+            {
+                fuelLabels[i].Text = player.GetEngines()[i].Fuel.ToString();
+            }
+
+            fuelLabel.Text = player.Fuel.ToString();
         }
 
         private void panel1_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.X < cellSize * CELLS_NUM && e.Y < cellSize * CELLS_NUM)
             {
-                colNumber = e.X / cellSize;
-                rowNumber = e.Y / cellSize;
-                coordsToMove = new Point(colNumber, rowNumber);
+
+                coordsToMove = new Point(e.X / cellSize, e.Y / cellSize);
+
                 refrashState = RefrashStates.PlaceMarker;
+
+                oldCoordsToMove = coordsToMove;
                 this.panel1.Invalidate();
             }
         }
@@ -286,7 +337,10 @@ namespace SpaceGame
 
         private void moveButton_Click(object sender, EventArgs e)
         {
-            refrashState = RefrashStates.Turn;
+            if (player.Fuel > 0 && coordsToMove != player.Position)
+                refrashState = RefrashStates.Turn;
+            Refuil();
+
             panel1.Invalidate();
         }
     }

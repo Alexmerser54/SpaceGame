@@ -17,8 +17,8 @@ namespace SpaceGame
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            GameForm gameForm = new GameForm();
-            new Form1(gameForm).Show();
+           // GameForm gameForm = new GameForm();
+            new Form1().Show();
             Application.Run();
         }
     }

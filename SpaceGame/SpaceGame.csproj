@@ -58,7 +58,12 @@
     <Compile Include="GameForm.Designer.cs">
       <DependentUpon>GameForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Game\Objects\GameObject.cs" />
+    <Compile Include="Game\Engine.cs" />
+    <Compile Include="Game\EngineType.cs" />
+    <Compile Include="Game\Generation.cs" />
+    <Compile Include="Game\GameObject.cs" />
+    <Compile Include="Game\NuclearEngine.cs" />
+    <Compile Include="Game\OilEngine.cs" />
     <Compile Include="Game\Planet.cs" />
     <Compile Include="Game\Player.cs" />
     <Compile Include="Game\Star.cs" />
@@ -93,6 +98,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Game\Objects\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
