@@ -76,7 +76,7 @@
     <Compile Include="Game\Engine.cs" />
     <Compile Include="Game\EngineType.cs" />
     <Compile Include="Game\Generation.cs" />
-    <Compile Include="Game\GameObject.cs" />
+    <Compile Include="Game\Objects\GameObject.cs" />
     <Compile Include="Game\NuclearEngine.cs" />
     <Compile Include="Game\Oil.cs" />
     <Compile Include="Game\OilEngine.cs" />
@@ -125,9 +125,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Game\Objects\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
       <Visible>False</Visible>

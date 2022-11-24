@@ -10,6 +10,5 @@ namespace SpaceGame.Game.Objects
     abstract class GameObject
     {
         protected Point coords;
-        
     }
 }
