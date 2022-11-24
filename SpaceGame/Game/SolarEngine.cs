@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace SpaceGame.Game
 {
-    class OilEngine : Engine
+    class SolarEngine : Engine
     {
-        public OilEngine()
+        public SolarEngine()
         {
-            this.fuel = this.maxCapacity = 1000;    
+            this.fuel = this.maxCapacity = 500;
         }
     }
 }

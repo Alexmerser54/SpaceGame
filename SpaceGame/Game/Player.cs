@@ -14,13 +14,15 @@ namespace SpaceGame.Game
         int fuel;
         Engine[] engines;
         int engineCount;
+        int maxFuel;
 
-        public Player(Point pos, int fuel, Engine[] engines)
+        public Player(Point pos, int maxFuel, Engine[] engines)
         {
             this.pos = pos;
-            this.fuel = fuel;
+            this.maxFuel = maxFuel;
             this.engines = engines;
             this.engineCount = engines.Length;
+            fuel = 0;
         }
 
         public Point Position
@@ -33,7 +35,7 @@ namespace SpaceGame.Game
 
         public void Move(int x, int y)
         {
-            bool canMove = false;
+              bool canMove = false;
 
             foreach (var engine in engines)
             {
@@ -50,8 +52,13 @@ namespace SpaceGame.Game
                 this.pos.X = x;
                 this.pos.Y = y;
             }
-            
 
+
+        }
+
+        public void Teleport(Point pos)
+        {
+            this.pos = pos;
         }
 
         public void refuelEngine(Type type)
@@ -81,9 +88,9 @@ namespace SpaceGame.Game
             }
         }
 
-        public void AddFuel(int num)
+        public void AddFuel()
         {
-            fuel += num;
+            if (fuel < maxFuel) fuel++;
         }
 
         public void RemoveFuel(int num)

@@ -10,10 +10,20 @@ namespace SpaceGame.Game
     class Planet
     {
         Point position;
+        Oil[] oils;
 
-        public Planet(Point pos)
+        public Planet(Point pos, Oil[] oils)
         {
             position = pos;
+            this.oils = oils;
+        }
+
+        public Oil[] Oils
+        {
+            get
+            {
+                return oils;
+            }
         }
 
         public Point Position

@@ -39,6 +39,7 @@
             this.engine2Label = new System.Windows.Forms.Label();
             this.engine1FuelLabel = new System.Windows.Forms.Label();
             this.engine1Label = new System.Windows.Forms.Label();
+            this.planetButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -59,9 +60,9 @@
             // 
             this.moveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.moveButton.AutoSize = true;
-            this.moveButton.Location = new System.Drawing.Point(513, 269);
+            this.moveButton.Location = new System.Drawing.Point(503, 269);
             this.moveButton.Name = "moveButton";
-            this.moveButton.Size = new System.Drawing.Size(95, 36);
+            this.moveButton.Size = new System.Drawing.Size(105, 36);
             this.moveButton.TabIndex = 1;
             this.moveButton.Text = "Сделать ход";
             this.moveButton.UseVisualStyleBackColor = true;
@@ -167,12 +168,26 @@
             this.engine1Label.TabIndex = 5;
             this.engine1Label.Text = "Первый";
             // 
+            // planetButton
+            // 
+            this.planetButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.planetButton.AutoSize = true;
+            this.planetButton.Location = new System.Drawing.Point(503, 211);
+            this.planetButton.Name = "planetButton";
+            this.planetButton.Size = new System.Drawing.Size(105, 36);
+            this.planetButton.TabIndex = 5;
+            this.planetButton.Text = "Сесть на планету";
+            this.planetButton.UseVisualStyleBackColor = true;
+            this.planetButton.Visible = false;
+            this.planetButton.Click += new System.EventHandler(this.planetButton_Click);
+            // 
             // GameForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(620, 317);
+            this.Controls.Add(this.planetButton);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.fuelLabel);
             this.Controls.Add(this.label1);
@@ -204,5 +219,6 @@
         private System.Windows.Forms.Label engine2Label;
         private System.Windows.Forms.Label engine3FuelLabel;
         private System.Windows.Forms.Label engine3Label;
+        private System.Windows.Forms.Button planetButton;
     }
 }

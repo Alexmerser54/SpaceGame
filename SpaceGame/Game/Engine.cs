@@ -12,7 +12,7 @@ namespace SpaceGame.Game
         protected int fuelPerTurn;
         protected int fuel;
 
-        protected int MaxCapacity
+        public int MaxCapacity
         {
             get
             {
@@ -27,6 +27,7 @@ namespace SpaceGame.Game
                 return fuel;
             }
         }
+
 
         public void AddFuel()
         {

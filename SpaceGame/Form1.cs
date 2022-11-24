@@ -21,14 +21,38 @@ namespace SpaceGame
         {
             InitializeComponent();
 
-          
+
+        }
+
+        private Engine GetInstanceFromName(string name)
+        {
+            switch (name)
+            {
+                case "Нефтяной двигатель":
+                    return new OilEngine();
+                case "Ядерный двигатель":
+                    return new NuclearEngine();
+                case "Звёздный двигатель":
+                    return new SolarEngine();
+                default:
+                    return new OilEngine();
+            }
         }
 
         private void buttonStart_Click(object sender, EventArgs e)
         {
             int fuel = 500;
 
-            if (radioButton2.Checked)
+
+            if (radioButton1.Checked)
+            {
+                engines = new Engine[3];
+                engines[0] = GetInstanceFromName(comboBox1.SelectedItem.ToString());
+                engines[1] = GetInstanceFromName(comboBox2.SelectedItem.ToString());
+                engines[2] = GetInstanceFromName(comboBox3.SelectedItem.ToString());
+                //player = new Player(new Point(2,4), )
+            }
+            else if (radioButton2.Checked)
             {
                 fuel = 1000;
                 engines = new Engine[2];
@@ -52,7 +76,13 @@ namespace SpaceGame
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox3.DropDownStyle = ComboBoxStyle.DropDownList;
 
+            comboBox1.SelectedItem = comboBox1.Items[0];
+            comboBox2.SelectedItem = comboBox1.Items[1];
+            comboBox3.SelectedItem = comboBox1.Items[2];
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -60,9 +90,11 @@ namespace SpaceGame
             Application.Exit();
         }
 
-        private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
-
+            comboBox1.Visible = radioButton1.Checked;
+            comboBox2.Visible = radioButton1.Checked;
+            comboBox3.Visible = radioButton1.Checked;
         }
     }
 }

@@ -19,6 +19,7 @@ namespace SpaceGame
         int starsCount;
         int planetCount;
         int stationsCount;
+        int oilsCount;
         //int cellSize = 30;
 
         Player player;
@@ -30,6 +31,7 @@ namespace SpaceGame
         Pen markerPen;
         Pen planetPen;
         Pen stationPen;
+        Pen oilPen;
 
 
         Random rand;
@@ -37,16 +39,22 @@ namespace SpaceGame
         Star[] stars;
         Planet[] planets;
         Station[] stations;
+        Oil[] oils;
 
         int tempX;
         int tempY;
         Point coordsToMove;
         Point oldCoordsToMove;
+        Point playerPlanetCoords;
 
         RefrashStates refrashState;
         Rectangle[][] rectangles;
 
         Label[] fuelLabels;
+
+        int planetIndex = -1;
+
+        bool isOnPlanet = false;
 
         void RenderPlayer(Pen pen, PaintEventArgs e)
         {
@@ -97,6 +105,16 @@ namespace SpaceGame
             foreach (var planet in planets)
             {
                 PaintSquare(rectangles[planet.Position.X][planet.Position.Y], e, pen.Brush);
+            }
+        }
+
+        void RenderOils(int planetIndex, Pen pen, PaintEventArgs e)
+        {
+
+            foreach (var oil in planets[planetIndex].Oils)
+            {
+                if (!oil.IsEmpty)
+                    PaintSquare(rectangles[oil.Position.X][oil.Position.Y], e, pen.Brush);
             }
         }
 
@@ -172,10 +190,21 @@ namespace SpaceGame
             foreach (var station in stations)
             {
                 if (player.Position == station.Position)
-                {
                     player.refuelEngine(typeof(NuclearEngine));
-                }
             }
+
+            foreach (var star in stars)
+            {
+                if (Math.Abs(player.Position.X - star.Position.X) <= star.EnergyRadius
+                     && Math.Abs(player.Position.Y - star.Position.Y) <= star.EnergyRadius)
+                    player.refuelEngine(typeof(SolarEngine));
+            }
+
+        }
+
+        void RefuilOil()
+        {
+
         }
 
         bool CheckDectroying(Player player, Star[] stars)
@@ -187,6 +216,23 @@ namespace SpaceGame
                     return true;
             }
             return false;
+        }
+
+        bool CheckPlanet()
+        {
+            for (int i = 0; i < planets.Length; i++)
+            {
+                if (player.Position == planets[i].Position)
+                {
+                    planetIndex = i;
+                    return true;
+                }
+            }
+            return false;
+        }
+        public GameForm()
+        {
+            InitializeComponent();
         }
 
         public GameForm(Player player)
@@ -206,6 +252,7 @@ namespace SpaceGame
             planets = new Planet[planetCount];
             stations = new Station[stationsCount];
 
+
             for (int i = 0; i < stars.Length; i++)
             {
                 int energyRadius = rand.Next(1, 3);
@@ -214,7 +261,12 @@ namespace SpaceGame
 
             for (int i = 0; i < planets.Length; i++)
             {
-                planets[i] = new Planet(new Point(rand.Next(CELLS_NUM), rand.Next(CELLS_NUM)));
+                oils = new Oil[rand.Next(1, 8)];
+                for (int j = 0; j < oils.Length; j++)
+                {
+                    oils[j] = new Oil(rand.Next(1, 5), new Point(rand.Next(CELLS_NUM), rand.Next(CELLS_NUM)));
+                }
+                planets[i] = new Planet(new Point(rand.Next(CELLS_NUM), rand.Next(CELLS_NUM)), oils);
             }
 
             for (int i = 0; i < stations.Length; i++)
@@ -233,6 +285,7 @@ namespace SpaceGame
             starDestroyRadiusPen = new Pen(Brushes.Red);
             planetPen = new Pen(Brushes.LawnGreen);
             stationPen = new Pen(Brushes.BlueViolet);
+            oilPen = new Pen(Brushes.DarkGray);
 
             fuelLabel.Text = player.Fuel.ToString();
 
@@ -268,6 +321,10 @@ namespace SpaceGame
                 {
                     labels[i].Text = "Ядерный";
                 }
+                else if (player.GetEngines()[i].GetType() == typeof(SolarEngine))
+                {
+                    labels[i].Text = "Звёздный";
+                }
             }
 
             //engine1Label.Text = player.GetEngines()[0].
@@ -297,11 +354,13 @@ namespace SpaceGame
                 {
                     Application.Exit();
                 }
+                if (CheckPlanet())
+                {
+                    planetButton.Visible = true;
+                }
+                else planetButton.Visible = false;
                 refrashState = RefrashStates.None;
             }
-
-            RenderPlayer(playerPen, e);
-
 
             for (int i = 0; i < player.EnginesCount; i++)
             {
@@ -309,6 +368,10 @@ namespace SpaceGame
             }
 
             fuelLabel.Text = player.Fuel.ToString();
+
+            RenderPlayer(playerPen, e);
+
+
         }
 
         private void panel1_MouseClick(object sender, MouseEventArgs e)
@@ -337,11 +400,86 @@ namespace SpaceGame
 
         private void moveButton_Click(object sender, EventArgs e)
         {
-            if (player.Fuel > 0 && coordsToMove != player.Position)
+            if (coordsToMove != player.Position)
                 refrashState = RefrashStates.Turn;
             Refuil();
 
+            if (isOnPlanet)
+            {
+                foreach (var oil in planets[planetIndex].Oils)
+                {
+                    if (player.Position == oil.Position && !oil.IsEmpty)
+                    {
+                        foreach (var engine in player.GetEngines())
+                        {
+                            oil.DrawOil();
+                            if (engine.GetType() == typeof(OilEngine) && engine.Fuel < engine.MaxCapacity)
+                            {
+                                
+                                player.refuelEngine(typeof(OilEngine));
+                            } else
+                            {
+                                player.AddFuel();
+                            }
+                        }
+                        
+                    }
+                }
+            }
+
             panel1.Invalidate();
+        }
+
+        private void planetButton_Click(object sender, EventArgs e)
+        {
+            if (!isOnPlanet)
+            {
+                if (planetIndex != -1)
+                {
+                    panel1.Paint -= panel1_Paint;
+                    panel1.Paint += panel1_PaintPlanet;
+                    isOnPlanet = true;
+                    planetButton.Text = "Улететь с планеты";
+                    playerPlanetCoords = planets[planetIndex].Position;
+                    panel1.Invalidate();
+                }
+            }
+             else
+            {
+                panel1.Paint -= panel1_PaintPlanet;
+                panel1.Paint += panel1_Paint;
+                
+                planetButton.Text = "Сесть на планету";
+                isOnPlanet = false;
+                player.Teleport(playerPlanetCoords);
+                panel1.Invalidate();
+            }
+        }
+
+        private void panel1_PaintPlanet(object sender, PaintEventArgs e)
+        {
+            DrawGrid(e, gridPed);
+            RenderOils(planetIndex, oilPen, e);
+
+            if (refrashState == RefrashStates.PlaceMarker || refrashState == RefrashStates.Turn)
+                RenderMarker(markerPen, e);
+
+            if (refrashState == RefrashStates.Turn)
+            {
+                MovePlayer();
+                refrashState = RefrashStates.None;
+            }
+
+
+            for (int i = 0; i < player.EnginesCount; i++)
+            {
+                fuelLabels[i].Text = player.GetEngines()[i].Fuel.ToString();
+            }
+
+            fuelLabel.Text = player.Fuel.ToString();
+
+            RenderPlayer(playerPen, e);
+
         }
     }
 }
