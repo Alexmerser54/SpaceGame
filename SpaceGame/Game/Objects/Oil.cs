@@ -1,21 +1,20 @@
-﻿using System;
+﻿using SpaceGame.Game.Objects;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpaceGame.Game
+namespace SpaceGame.Game.Objects
 {
-    class Oil
+    class Oil: GameObject
     {
         int value;
-        Point position;
         bool isEmpty;
-        public Oil(int value, Point position)
+        public Oil(int value, Point position): base(position)
         {
             this.value = value;
-            this.position = position;
         }
         
         public void DrawOil()
@@ -24,13 +23,6 @@ namespace SpaceGame.Game
             else isEmpty = true;
         }
 
-        public Point Position
-        {
-            get
-            {
-                return position;
-            }
-        }
 
         public bool IsEmpty
         {

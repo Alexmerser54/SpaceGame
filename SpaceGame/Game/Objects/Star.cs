@@ -5,18 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpaceGame.Game
+namespace SpaceGame.Game.Objects
 {
-    class Star
+    class Star: GameObject
     {
-        Point position;
         int energyRadius;
         int destroyRadius;
         int power;
 
-        public Star(Point pos, int energyRadius, int destroyRadius, int power)
+        public Star(Point pos, int energyRadius, int destroyRadius, int power): base(pos)
         {
-            position = pos;
             this.energyRadius = energyRadius;
             this.destroyRadius = destroyRadius;
             this.power = power;
@@ -47,13 +45,6 @@ namespace SpaceGame.Game
             }
         }
 
-        public Point Position
-        {
-            get
-            {
-                return position;
-            }
-        }
 
     }
 }

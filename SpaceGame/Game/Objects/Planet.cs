@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace SpaceGame.Game.Objects
 {
-    abstract class GameObject
+    class Planet : GameObject
     {
-        protected Point position;
+        Oil[] oils;
 
-        public GameObject(Point position)
+        public Planet(Point pos, Oil[] oils) : base(pos)
         {
-            this.position = position;
+            this.oils = oils;
         }
 
-        public Point Position => position;
+        public Oil[] Oils => oils;
     }
 }

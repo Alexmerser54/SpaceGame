@@ -1,41 +1,34 @@
-﻿using System;
+﻿using SpaceGame.Game.Objects;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpaceGame.Game
+namespace SpaceGame.Game.Objects
 {
-    class Player
+    class Player: GameObject
     {
-        Point pos;
-        int[,] postion;
         int fuel;
         Engine[] engines;
         int engineCount;
         int maxFuel;
-
-        public Player(Point pos, int maxFuel, Engine[] engines)
+        
+        public Player(Point pos, int maxFuel, Engine[] engines): base(pos)
         {
-            this.pos = pos;
             this.maxFuel = maxFuel;
             this.engines = engines;
             this.engineCount = engines.Length;
             fuel = 0;
         }
 
-        public Point Position
-        {
-            get
-            {
-                return pos;
-            }
-        }
 
-        public void Move(int x, int y)
+        public void Move(Point newPos)
         {
-              bool canMove = false;
+            Point coordsToMove;
+
+            bool canMove = false;
 
             foreach (var engine in engines)
             {
@@ -47,18 +40,56 @@ namespace SpaceGame.Game
                 }
             }
 
-            if (canMove)
+            if (!canMove) return;
+
+            int tempX;
+            int tempY;
+
+            if (newPos.X > position.X)
             {
-                this.pos.X = x;
-                this.pos.Y = y;
+                tempX = position.X + 1;
             }
+            else if (newPos.X < position.X)
+            {
+                tempX = position.X - 1;
+            }
+            else
+            {
+                tempX = position.X;
+            }
+
+            if (newPos.Y > position.Y)
+            {
+                tempY = position.Y + 1;
+            }
+            else if (newPos.Y < position.Y)
+            {
+                tempY = position.Y - 1;
+            }
+            else
+            {
+                tempY = position.Y;
+            }
+
+
+            foreach (var engine in engines)
+            {
+                if (engine.Fuel > 0)
+                {
+                    canMove = true;
+                    engine.EatFuel();
+                    break;
+                }
+            }
+
+            position = new Point(tempX, tempY);
 
 
         }
 
         public void Teleport(Point pos)
         {
-            this.pos = pos;
+            this.position = pos;
         }
 
         public void refuelEngine(Type type)
@@ -102,6 +133,7 @@ namespace SpaceGame.Game
         {
             return engines;
         }
+
 
     }
 }
