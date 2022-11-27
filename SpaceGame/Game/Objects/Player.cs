@@ -14,12 +14,14 @@ namespace SpaceGame.Game.Objects
         Engine[] engines;
         int engineCount;
         int maxFuel;
-        
-        public Player(Point pos, int maxFuel, Engine[] engines): base(pos)
+        int fuelPerTurn;
+
+        public Player(Point pos, int maxFuel, Engine[] engines, int fuelPerTurn): base(pos)
         {
             this.maxFuel = maxFuel;
             this.engines = engines;
             this.engineCount = engines.Length;
+            this.fuelPerTurn = fuelPerTurn;
             fuel = 0;
         }
 
@@ -35,7 +37,6 @@ namespace SpaceGame.Game.Objects
                 if (engine.Fuel > 0)
                 {
                     canMove = true;
-                    engine.EatFuel();
                     break;
                 }
             }
@@ -76,8 +77,7 @@ namespace SpaceGame.Game.Objects
             {
                 if (engine.Fuel > 0)
                 {
-                    canMove = true;
-                    engine.EatFuel();
+                    engine.EatFuel(fuelPerTurn);
                     break;
                 }
             }
@@ -92,13 +92,13 @@ namespace SpaceGame.Game.Objects
             this.position = pos;
         }
 
-        public void refuelEngine(Type type)
+        public void refuelEngine(Type type, int num)
         {
             foreach (var engine in engines)
             {
                 if (engine.GetType() == type)
                 {
-                    engine.AddFuel();
+                    engine.AddFuel(num);
                 }
             }
         }

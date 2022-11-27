@@ -12,12 +12,14 @@ namespace SpaceGame.Game.Objects
         int energyRadius;
         int destroyRadius;
         int power;
+        int size;
 
-        public Star(Point pos, int energyRadius, int destroyRadius, int power): base(pos)
+        public Star(Point pos, int energyRadius, int destroyRadius, int power, int size): base(pos)
         {
             this.energyRadius = energyRadius;
             this.destroyRadius = destroyRadius;
             this.power = power;
+            this.size = size;
         }
 
         public int Power
@@ -36,6 +38,7 @@ namespace SpaceGame.Game.Objects
             }
         }
 
+        public int Size => size;
 
         public int DestroyRadius
         {

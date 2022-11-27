@@ -15,7 +15,7 @@ namespace SpaceGame
 {
     partial class GameForm : Form
     {
-        const int CELLS_NUM = 40;
+        int CELLS_NUM;
         int starsCount;
         int planetCount;
         int stationsCount;
@@ -61,14 +61,14 @@ namespace SpaceGame
             foreach (var station in stations)
             {
                 if (player.Position == station.Position)
-                    player.refuelEngine(typeof(NuclearEngine));
+                    player.refuelEngine(typeof(NuclearEngine), 1);
             }
 
             foreach (var star in stars)
             {
                 if (Math.Abs(player.Position.X - star.Position.X) <= star.EnergyRadius
                      && Math.Abs(player.Position.Y - star.Position.Y) <= star.EnergyRadius)
-                    player.refuelEngine(typeof(SolarEngine));
+                    player.refuelEngine(typeof(SolarEngine), star.Power);
             }
 
         }
@@ -78,8 +78,15 @@ namespace SpaceGame
         {
             foreach (var star in stars)
             {
-                if (Math.Pow(player.Position.X - star.Position.X, 2) + Math.Pow(player.Position.Y - star.Position.Y, 2) <= Math.Pow(star.DestroyRadius, 2))
-                    return true;
+                int r2 = (int)Math.Pow(player.Position.X - star.Position.X, 2) + (int)Math.Pow(player.Position.Y - star.Position.Y, 2);
+                int r1 = (int)Math.Pow(star.DestroyRadius, 2);
+
+                if (r2 <= r1)
+                {
+                    if (r2 <= (int)Math.Pow(1 + star.DestroyRadius - (int)Math.Abs(player.Position.X - star.Position.X), 2) ||
+                                        r2 <= (int)Math.Pow(1 + star.DestroyRadius - (int)Math.Abs(player.Position.Y - star.Position.Y), 2))
+                        return true;
+                }
             }
             return false;
         }
@@ -97,23 +104,29 @@ namespace SpaceGame
             return false;
         }
 
-        public GameForm(Player player)
+        public GameForm(Player player, int cellsNum)
         {
             InitializeComponent();
             this.player = player;
+            this.CELLS_NUM = cellsNum;
 
             generation = new Generation();
             rand = new Random();
 
-            starsCount = rand.Next(1, 5);
-            planetCount = rand.Next(1, 6);
-            stationsCount = rand.Next(1, 3);
-           
+            starsCount = rand.Next(1, CELLS_NUM/10);
+            planetCount = rand.Next(1, CELLS_NUM/10);
+            stationsCount = rand.Next(1, CELLS_NUM/20);
+
             planets = new Planet[planetCount];
             stations = new Station[stationsCount];
-            stars = generation.GenerateStars(rand, starsCount, CELLS_NUM);
-            stations = generation.GenerateStations(rand, planetCount, CELLS_NUM);
-            planets = generation.GeneratePlanets(rand, planetCount, CELLS_NUM);
+
+
+            bool wrongGeneration = false;
+            int counts = 0;
+
+
+
+
 
             markerPen = new Pen(Brushes.Red);
             playerPen = new Pen(Brushes.Black);
@@ -229,7 +242,7 @@ namespace SpaceGame
                             if (engine.GetType() == typeof(OilEngine) && engine.Fuel < engine.MaxCapacity)
                             {
 
-                                player.refuelEngine(typeof(OilEngine));
+                                player.refuelEngine(typeof(OilEngine), 1);
                             }
                             else
                             {

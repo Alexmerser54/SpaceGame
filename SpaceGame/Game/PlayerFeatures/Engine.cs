@@ -18,14 +18,15 @@ namespace SpaceGame.Game
         public int Fuel => fuel;
 
 
-        public void AddFuel()
+        public void AddFuel(int num)
         {
-            if (fuel < maxCapacity) fuel++;
+            if (fuel + num >= maxCapacity) fuel = maxCapacity;
+            else if (fuel < maxCapacity) fuel += num;
         }
 
-        public void EatFuel()
+        public void EatFuel(int num)
         {
-            if (fuel > 0) fuel--;
+            if (fuel > 0) fuel -= num;
         }
         //EngineType type;
         //public Engine(EngineType type)

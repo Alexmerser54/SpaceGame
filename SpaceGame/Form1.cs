@@ -42,7 +42,7 @@ namespace SpaceGame
         private void buttonStart_Click(object sender, EventArgs e)
         {
             int fuel = 500;
-
+            int fuelPerTurn = 1;
 
             if (radioButton1.Checked)
             {
@@ -50,7 +50,7 @@ namespace SpaceGame
                 engines[0] = GetInstanceFromName(comboBox1.SelectedItem.ToString());
                 engines[1] = GetInstanceFromName(comboBox2.SelectedItem.ToString());
                 engines[2] = GetInstanceFromName(comboBox3.SelectedItem.ToString());
-                //player = new Player(new Point(2,4), )
+                fuelPerTurn = 4;
             }
             else if (radioButton2.Checked)
             {
@@ -58,7 +58,7 @@ namespace SpaceGame
                 engines = new Engine[2];
                 engines[0] = new OilEngine();
                 engines[1] = new OilEngine();
-                //player = new Player(new Point(2,4), )
+                fuelPerTurn = 2;
             }
             else if (radioButton3.Checked)
             {
@@ -67,8 +67,12 @@ namespace SpaceGame
                 engines[0] = new NuclearEngine();
             }
 
-            player = new Player(new Point(2, 4), fuel, engines);
-            GameForm gameForm = new GameForm(player);
+            int cells = Convert.ToInt32(textBox1.Text);
+
+            Random rand = new Random();
+
+            player = new Player(new Point(rand.Next(0, cells), rand.Next(0, cells)), fuel, engines, fuelPerTurn);
+            GameForm gameForm = new GameForm(player, cells);
 
             this.Hide();
             gameForm.Show();

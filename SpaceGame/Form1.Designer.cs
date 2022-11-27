@@ -36,6 +36,8 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,9 +55,9 @@
             // 
             this.radioButton1.Location = new System.Drawing.Point(6, 19);
             this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(261, 17);
+            this.radioButton1.Size = new System.Drawing.Size(367, 17);
             this.radioButton1.TabIndex = 0;
-            this.radioButton1.Text = "Три любых двигателя (500 ед топлива)";
+            this.radioButton1.Text = "Три любых двигателя (500 ед топлива), 4 ед. топлива за ход";
             this.radioButton1.UseVisualStyleBackColor = true;
             this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
             // 
@@ -66,7 +68,7 @@
             this.groupBox1.Controls.Add(this.radioButton1);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(273, 91);
+            this.groupBox1.Size = new System.Drawing.Size(379, 91);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Выбор типа корабля";
@@ -75,10 +77,10 @@
             // 
             this.radioButton3.Location = new System.Drawing.Point(6, 65);
             this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(261, 17);
+            this.radioButton3.Size = new System.Drawing.Size(367, 17);
             this.radioButton3.TabIndex = 2;
             this.radioButton3.TabStop = true;
-            this.radioButton3.Text = "Один ядерный двигатель  (1500 ед топлива)";
+            this.radioButton3.Text = "Один ядерный двигатель  (1500 ед топлива), 1 ед. топлива за ход";
             this.radioButton3.UseVisualStyleBackColor = true;
             // 
             // radioButton2
@@ -86,10 +88,10 @@
             this.radioButton2.Checked = true;
             this.radioButton2.Location = new System.Drawing.Point(6, 42);
             this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(261, 17);
+            this.radioButton2.Size = new System.Drawing.Size(367, 17);
             this.radioButton2.TabIndex = 1;
             this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "Два нефтяных двигателя  (1000 ед топлива)";
+            this.radioButton2.Text = "Два нефтяных двигателя  (1000 ед топлива), 2 ед. топлива за ход";
             this.radioButton2.UseVisualStyleBackColor = true;
             // 
             // comboBox1
@@ -100,7 +102,7 @@
             "Нефтяной двигатель",
             "Ядерный двигатель",
             "Звёздный двигатель"});
-            this.comboBox1.Location = new System.Drawing.Point(366, 31);
+            this.comboBox1.Location = new System.Drawing.Point(419, 31);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 21);
             this.comboBox1.TabIndex = 2;
@@ -114,7 +116,7 @@
             "Нефтяной двигатель",
             "Ядерный двигатель",
             "Звёздный двигатель"});
-            this.comboBox2.Location = new System.Drawing.Point(366, 58);
+            this.comboBox2.Location = new System.Drawing.Point(419, 58);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(121, 21);
             this.comboBox2.TabIndex = 3;
@@ -128,17 +130,37 @@
             "Нефтяной двигатель",
             "Ядерный двигатель",
             "Звёздный двигатель"});
-            this.comboBox3.Location = new System.Drawing.Point(366, 85);
+            this.comboBox3.Location = new System.Drawing.Point(419, 85);
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(121, 21);
             this.comboBox3.TabIndex = 4;
             this.comboBox3.Visible = false;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(15, 119);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(182, 13);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Кол-во клеток в одном измерении";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(204, 119);
+            this.textBox1.MaxLength = 3;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(75, 20);
+            this.textBox1.TabIndex = 6;
+            this.textBox1.Text = "40";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(499, 339);
+            this.ClientSize = new System.Drawing.Size(552, 339);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox3);
             this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.comboBox1);
@@ -150,6 +172,7 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -163,6 +186,8 @@
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.ComboBox comboBox2;
         private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 

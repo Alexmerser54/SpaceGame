@@ -13,7 +13,7 @@ namespace SpaceGame.Game.Utils
     {
         int cellSize;
 
-        public Rectangle[][] GenerateCells(int CELLS_NUM, int sizeOfField )
+        public Rectangle[][] GenerateCells(int CELLS_NUM, int sizeOfField)
         {
             cellSize = sizeOfField / CELLS_NUM;
             Rectangle[][] rectangles = new Rectangle[CELLS_NUM][];
@@ -28,15 +28,21 @@ namespace SpaceGame.Game.Utils
             return rectangles;
         }
 
-        public int CellSize => cellSize; 
+        public int CellSize => cellSize;
 
         public Star[] GenerateStars(Random rand, int count, int CELLS_NUM)
         {
+
+            int size;
+            Point coords;
             Star[] stars = new Star[count];
             for (int i = 0; i < count; i++)
             {
-                int energyRadius = rand.Next(1, 3);
-                stars[i] = new Star(new Point(rand.Next(energyRadius, CELLS_NUM - energyRadius), rand.Next(energyRadius, CELLS_NUM - energyRadius)), energyRadius, rand.Next(1, energyRadius), 20);
+                size = rand.Next(0, 3);
+                int energyRadius = rand.Next(1, 3) + size;
+                //int destroyRadius = rand.Next(1, energyRadius) + size;
+                //coords = new Point()
+                stars[i] = new Star(new Point(rand.Next(energyRadius+size, CELLS_NUM - energyRadius-size), rand.Next(energyRadius+size, CELLS_NUM - energyRadius-size)), energyRadius+size, rand.Next(1, energyRadius)+size, rand.Next(1,20), size);
             }
             return stars;
         }

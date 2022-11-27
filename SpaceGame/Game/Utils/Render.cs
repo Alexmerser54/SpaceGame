@@ -103,7 +103,30 @@ namespace SpaceGame.Game.Utils
                     endX--;
                 }
 
-                RenderObject(star, starPen, e);
+                startX = star.Position.X - star.Size;
+                startY = star.Position.Y;
+                endX = startX + 2 * star.Size + 1;
+
+                for (int i = 0; i <= star.Size; i++)
+                {
+                    for (int j = startX; j < endX; j++)
+                    {
+                        PaintSquare(rectangles[j][startY + i], e, starPen.Brush);
+                        PaintSquare(rectangles[j][startY - i], e, starPen.Brush);
+                    }
+                    startX++;
+                    endX--;
+                }
+
+                //for (int i = -star.Size; i < -star.Size; i++)
+                //{
+                //    for (int j = -star.Size; j < -star.Size; j++)
+                //    {
+                //        PaintSquare(rectangles[j][i], e, destroyRadiusPen.Brush);
+                //    }
+                //}
+
+                //RenderObject(star, starPen, e);
                 //PaintSquare(rectangles[star.Position.X][star.Position.Y], e, starPen.Brush);
             }
         }
