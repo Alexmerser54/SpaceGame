@@ -40,8 +40,6 @@ namespace SpaceGame.Game.Utils
             {
                 size = rand.Next(0, 3);
                 int energyRadius = rand.Next(1, 3) + size;
-                //int destroyRadius = rand.Next(1, energyRadius) + size;
-                //coords = new Point()
                 stars[i] = new Star(new Point(rand.Next(energyRadius+size, CELLS_NUM - energyRadius-size), rand.Next(energyRadius+size, CELLS_NUM - energyRadius-size)), energyRadius+size, rand.Next(1, energyRadius)+size, rand.Next(1,20), size);
             }
             return stars;

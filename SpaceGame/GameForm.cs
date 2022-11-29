@@ -123,7 +123,63 @@ namespace SpaceGame
 
             bool wrongGeneration = false;
             int counts = 0;
+            do
+            {
 
+                if (counts > 5) {
+                    rand = new Random();
+                    counts = 0;
+                }
+
+                wrongGeneration = false;
+                stars = generation.GenerateStars(rand, starsCount, CELLS_NUM);
+                stations = generation.GenerateStations(rand, planetCount, CELLS_NUM);
+                planets = generation.GeneratePlanets(rand, planetCount, CELLS_NUM);
+
+                foreach (var star in stars)
+                {
+
+                    if (Math.Abs(star.Position.X - player.Position.X) <= star.DestroyRadius + 2 ||
+                            Math.Abs(star.Position.Y - player.Position.Y) <= star.DestroyRadius + 2)
+                        wrongGeneration = true;
+
+                    foreach (var planet in planets)
+                    {
+                        if (Math.Abs(star.Position.X - planet.Position.X) <= star.DestroyRadius + 2 ||
+                            Math.Abs(star.Position.Y - planet.Position.Y) <= star.DestroyRadius + 2)
+                            wrongGeneration = true;
+                    }
+                    foreach (var station in stations)
+                    {
+                        if (Math.Abs(star.Position.X - station.Position.X) <= star.DestroyRadius + 2 ||
+                            Math.Abs(star.Position.Y - station.Position.Y) <= star.DestroyRadius + 2)
+                            wrongGeneration = true;
+                    }
+                }
+
+
+                foreach (var planet in planets)
+                {
+                    foreach (var station in stations)
+                    {
+                        if (Math.Abs(planet.Position.X - station.Position.X) <= 2 ||
+                           Math.Abs(planet.Position.Y - station.Position.Y) <= 2)
+                            wrongGeneration = true;
+                    }
+                }
+
+                //for (int i = 0; i < stars.Length; i++)
+                //{
+                //    for (int j = i; j < stars.Length - 1; j++)
+                //    {
+                //        int radius = stars[i].DestroyRadius > stars[j].DestroyRadius ? stars[i].DestroyRadius : stars[j].DestroyRadius;
+                //        if (Math.Abs(stars[i].Position.X - stars[j].Position.X) <= radius + 2 ||
+                //           Math.Abs(stars[i].Position.Y - stars[j].Position.Y) <= radius + 2)
+                //            wrongGeneration = true;
+                //    }
+                //}
+
+            } while (wrongGeneration);
 
 
 

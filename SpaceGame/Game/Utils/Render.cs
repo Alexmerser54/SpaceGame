@@ -117,17 +117,6 @@ namespace SpaceGame.Game.Utils
                     startX++;
                     endX--;
                 }
-
-                //for (int i = -star.Size; i < -star.Size; i++)
-                //{
-                //    for (int j = -star.Size; j < -star.Size; j++)
-                //    {
-                //        PaintSquare(rectangles[j][i], e, destroyRadiusPen.Brush);
-                //    }
-                //}
-
-                //RenderObject(star, starPen, e);
-                //PaintSquare(rectangles[star.Position.X][star.Position.Y], e, starPen.Brush);
             }
         }
 
@@ -142,13 +131,6 @@ namespace SpaceGame.Game.Utils
             }
         }
 
-        //void RenderStations(Pen pen, PaintEventArgs e)
-        //{
-        //    foreach (var station in stations)
-        //    {
-        //        PaintSquare(rectangles[station.Position.X][station.Position.Y], e, pen.Brush);
-        //    }
-        //}
 
         public void RenderMarker(Point pos, Pen pen, PaintEventArgs e)
         {
